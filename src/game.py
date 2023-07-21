@@ -1,8 +1,12 @@
 import pygame
 from pygame import font
-from fprenderer import Renderer
+from renderer import Renderer
 from debug_screen import DebugScreen
+from src.hud import HeadsUpDisplay
+from walls import Walls
 from src.player_character import PlayerCharacter
+from worldmap import WorldMap
+from input.input_handler import InputHandler
 
 SCREEN_X = 1280
 SCREEN_Y = 720
@@ -12,26 +16,26 @@ def main():
     font.init()
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
+    input_handler = InputHandler()
     clock = pygame.time.Clock()
     running = True
-    renderer = Renderer(screen, SCREEN_X, SCREEN_Y)
+    renderer = Renderer(screen, Walls(SCREEN_X, SCREEN_Y))
     debug_screen = DebugScreen()
-    pc = PlayerCharacter(1, 3, debug_screen)
+    world = WorldMap()
+    pc = PlayerCharacter(1, 5, input_handler, debug_screen, renderer)
+    pc.set_world(world)
+    hud = HeadsUpDisplay(screen, SCREEN_X, SCREEN_Y, pc)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_w:
-                    pc.move_forward()
-                if event.key == pygame.K_d:
-                    pc.turn()
-                elif event.key == pygame.K_a:
-                    pc.turn(False)
+            else:
+                input_handler.on_event(event)
 
         screen.fill("black")
-        renderer.render_walls(True, True, True, True, False)
+        pc.camera.render_walls()
         debug_screen.render(screen)
+        hud.draw()
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()

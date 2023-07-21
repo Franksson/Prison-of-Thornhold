@@ -28,10 +28,12 @@ class Walls:
         wall_height = int(((y - end_height) / 2) * FIRST_WALL_WIDTH)
         wall_b = Vector2(wall_width, wall_height)
         wall_c = Vector2(wall_b.x, self.screen.y - wall_b.y)
+        wall_points = [wall_b, wall_c]
 
         # Walls
         self.first_wall_l = [Vector2(0, 0), wall_b, wall_c, Vector2(0, y)]
         self.end_wall = end_points + [self.mirror(x) for x in end_points][::-1]
+        self.forward_wall = wall_points + [self.mirror(points) for points in wall_points][::-1]
         self.second_wall_l = [wall_b, end_a, end_b, wall_c]
         self.open_first_wall_l = [Vector2(0, wall_b.y), wall_b, wall_c, Vector2(0, wall_c.y)]
         self.open_second_wall_l = [Vector2(wall_b.x, end_a.y), end_a, end_b, Vector2(wall_c.x, end_b.y)]
