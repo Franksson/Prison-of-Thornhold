@@ -2,7 +2,7 @@
 
 2D First person RPG written in python.
 
-You're being held prisioner in the dungeons of Thornhold after a undead horde has taken control of the hold. One night you find you cell door unlocked and the skeleton guard laying as i pile of bones on the floor. With the bonepile lies a sword. Will you escape?
+You're being held prisoner in the dungeons of Thornhold after an undead horde has taken control of the hold. One night you find your cell door unlocked and the skeleton guard laying as a pile of bones on the floor. With the bone pile lies a rusty sword. Will you escape?
 
 ## Running
 
@@ -12,7 +12,7 @@ python src/game.py
 ## Features
 
 TODO:
- - [ ] First person navigation
+ - [x] First person navigation
  - [ ] First person combat
  - [ ] Inventory
  - [ ] Stats
