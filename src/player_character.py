@@ -1,9 +1,11 @@
+import math
 from typing import Callable
 
 from src.debug_screen import DebugScreen
 from direction_enum import Direction
 from components.fp_camera import FirstPersonCameraComponent
 from renderer import Renderer
+from src.event_context import EventContext
 from src.input.input_handler import InputHandler
 from src.worldmap import WorldMap
 from int_vector_2d import IntVector2D
@@ -14,7 +16,10 @@ class PlayerCharacter:
     def __init__(self, x: int, y: int,
                  input_handler: InputHandler,
                  debug_screen: DebugScreen,
-                 renderer: Renderer):
+                 renderer: Renderer,
+                 max_hitpoints=100):
+        self.max_hitpoinst = max_hitpoints
+        self.hitpoints = max_hitpoints
         self.x = x
         self.y = y
         self.facing = Direction.EAST
@@ -82,8 +87,16 @@ class PlayerCharacter:
             self.y = new_pos.y
             self.debug_text_update()
 
+    def take_damage(self, damage):
+        damage = int(damage)
+        self.hitpoints = max(0, self.hitpoints - damage)
+        self.send_event(EventContext(name="PlayerHP", value=self.hitpoints))
+        self.send_event(EventContext(name="PlayerTookDamage", value=damage))
+        if self.hitpoints < 0:
+            self.send_event(EventContext(name="PlayerDied", value=None))
+
     def can_move_to(self, move_vector):
         result = False
         if self.world is not None:
-            result = self.world.isWall(move_vector) is False
+            result = self.world.obstructed(move_vector) is False
         return result

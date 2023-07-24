@@ -10,6 +10,11 @@ class IntVector2D:
             return IntVector2D(-self.x, -self.y)
         elif times == 3:
             return IntVector2D(self.y, -self.x)
+        else:
+            return self
 
     def __add__(self, other):
         return IntVector2D(self.x + other.x, self.y + other.y)
+
+    def __mul__(self, other: int):
+        return IntVector2D(self.x * other, self.y * other)

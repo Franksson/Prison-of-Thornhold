@@ -1,4 +1,4 @@
-
+from src.components.world_position_component import WorldPositionComponent
 from src.direction_enum import Direction
 from src.renderer import Renderer
 from src.int_vector_2d import IntVector2D
@@ -41,3 +41,17 @@ class FirstPersonCameraComponent:
         world_pos = IntVector2D(self.parent.x + pos.x, self.parent.y + pos.y)
         if self.parent.world is not None:
             return self.parent.world.isWall(world_pos)
+
+    def get_world_objects_forward(self, distance: int = 0) -> list[WorldPositionComponent] | None:
+        forward = IntVector2D(0, -1).turn_clockwise(self.parent.facing)
+        forward = forward * (distance + 1)
+        world_coords = IntVector2D(self.parent.x + forward.x, self.parent.y + forward.y)
+        return self.parent.world.get_position(world_coords.x, world_coords.y)
+
+    def render_forwards(self):
+        for i in range(2):
+            worldPositionComponents = self.get_world_objects_forward(i)
+            if worldPositionComponents is not None:
+                for component in worldPositionComponents:
+                    texture = component.get_parent().get_component("GraphicsComponent").texture_name
+                    self.renderer.render_texture(texture, i)
